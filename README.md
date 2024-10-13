@@ -162,3 +162,89 @@ diskutil apfs resizeContainer disk0s2 0
 以上操作参考了：https://asahilinux.org/2024/10/aaa-gaming-on-asahi-linux/
 以及官方wiki：https://github.com/AsahiLinux/docs/wiki/Partitioning-cheatsheet
 ```
+
+# 附加内容：扩展Asahi Linux的磁盘分区大小
+
+```markdown
+# 获取macOS磁盘分区信息 分配15GB的空闲空间给Asahi Linux使用
+
+以下是示例输出的 `/dev/disk0` 的分区信息：
+
+| #   | 类型                              | 名称                 | 大小         | 标识符       |
+|-----|-----------------------------------|----------------------|--------------|--------------|
+| 0   | GUID_partition_scheme             | -                    | 500.3 GB     | disk0        |
+| 1   | Apple_APFS_ISC Container          | disk1                | 524.3 MB     | disk0s1      |
+| 2   | Apple_APFS Container              | disk5                | 330.0 GB     | disk0s2      |
+| 3   | Apple_APFS Container              | disk3                | 2.5 GB       | disk0s3      |
+| 4   | Apple_APFS Container              | disk2                | 2.5 GB       | disk0s4      |
+| 5   | EFI                               | EFI - FEDOR          | 524.3 MB     | disk0s5      |
+| 6   | Linux Filesystem                  | -                    | 1.1 GB       | disk0s6      |
+| 7   | Linux Filesystem                  | -                    | 157.8 GB     | disk0s7      |
+| 8   | Apple_APFS_Recovery Container     | disk4                | 5.4 GB       | disk0s8      |
+```
+要从现有的 APFS 容器（330 GB 空间的 disk0s2）中分出 15 GB 空间
+
+```bash
+sudo diskutil apfs resizeContainer disk5 315g
+```
+> ⚠️ 这条命令会将 APFS 容器 disk5 的大小缩小到 315 GB，从而分配出 15 GB 的空闲空间。你可以调整 315g 为你实际需要的大小
+
+## 1. 添加空闲分区到现有 Btrfs 文件系统
+
+以上操作需要在Asahi Linux的终端中操作 分区信息可通过如下命令获取
+```bash
+sudo lsblk -f
+```
+
+假设现有的主 Btrfs 文件系统位于 `/dev/nvme0n1p7`，空闲分区为 `/dev/nvme0n1p9`。使用以下命令将 `nvme0n1p9` 添加到 `nvme0n1p7` 的 Btrfs 文件系统中：
+
+```bash
+sudo btrfs device add /dev/nvme0n1p9 /
+```
+
+> ⚠️ 注意：请将 `/` 替换为实际挂载的目录路径。如果 nvme0n1p7 被挂载到其他位置（例如 /mnt/data），则替换成对应的挂载点。
+
+## 2. 重新分配 Btrfs 文件系统
+
+添加分区后，因为Btrfs 文件系统不会自动扩展到新的设备上，因此你需要手动运行 btrfs balance 命令来重新分配空间：
+
+```bash
+sudo btrfs balance start /
+```
+
+> ⚠️ 注意：请将 `/` 替换为实际挂载的目录路径。如果 nvme0n1p7 被挂载到其他位置（例如 /mnt/data），则替换成对应的挂载点。
+这个命令将确保新添加的分区中的可用空间能够被整个 Btrfs 文件系统使用
+
+## 3. 验证合并是否成功
+
+### 查看 Btrfs 文件系统的状态
+
+合并完成后，你可以使用以下命令查看 Btrfs 文件系统的状态，确认新空间是否已添加
+
+```bash
+sudo btrfs filesystem usage /
+```
+
+你应该在其中看到类似如下的输出条目：
+
+```text
+Overall:
+    Device size:                 180.00GiB
+    Device allocated:            165.00GiB
+    Device unallocated:          15.00GiB
+
+Unallocated:
+   /dev/nvme0n1p7                15.00GiB
+```
+
+> ⚠️ 注意：此项操作存在风险 可能会导致重启后卡在进入KDE Plasma的动画
+
+## 参考命令
+
+- 移除分区（如果需要恢复单一分区 比如移除 nvme0n1p9 并将其空间合并回 nvme0n1p7）
+  ```bash
+  sudo btrfs device remove /dev/nvme0n1p9 /
+  ```
+
+通过以上步骤，你可以将空闲分区逻辑合并到已有的 Btrfs 文件系统中，并确保它们在系统重启后自动挂载。
+```
