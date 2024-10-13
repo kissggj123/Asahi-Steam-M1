@@ -157,4 +157,8 @@ diskutil apfs resizeContainer disk0s2 0
    3:        Apple_APFS_Recovery Container disk2         5.4 GB     disk0s7
 ```
 至此，Asahi Linux 已经被完全卸载，磁盘空间成功合并到 macOS 中。
+
+```text
+    以上操作参考了：https://asahilinux.org/2024/10/aaa-gaming-on-asahi-linux/
+    以及官方wiki：https://github.com/AsahiLinux/docs/wiki/Partitioning-cheatsheet
 ```
