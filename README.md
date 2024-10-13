@@ -72,7 +72,7 @@ New size（后续给 Linux 的空间） = Total size（总空间） - [Minimum n
 
 安装完成，可以开始使用 Asahi Linux 并享受支持 Steam 的游戏体验了
 
-## 6. 享受完成后如需卸载卸载
+## 6. 享受完成后如需卸载
 
 #以下是卸载 Asahi Linux 步骤的代码：
 
