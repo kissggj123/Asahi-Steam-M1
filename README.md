@@ -39,7 +39,7 @@ New size（后续给 Linux 的空间） = Total size（总空间） - [Minimum n
 ## 4. 启动到 Asahi Linux 的前序步骤
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/f887ea5b-7f08-4a63-96c2-747cff9f70b6">
 
-当安装过程结束并且系统完全关机后，按住电源键，直到出现启动选项。选择 Fedora Linux（或者你设置的名称）。进入恢复界面后，按照提示输入你的 macOS 本地账户的账号和密码（需要输入两次）。输入成功后，系统会自动重启到 Asahi Linux。
+当出现上图提示安装过程结束 你需要在回车后等待系统完全关机后，按住电源键，直到出现启动选项。选择 Fedora Linux（或者你设置的名称）。进入恢复界面后，按照提示输入你的 macOS 本地账户的账号和密码（需要输入两次）。输入成功后，系统会自动重启到 Asahi Linux。
 
 ## 5. 后续操作（在 Asahi Linux 终端进行）
 
