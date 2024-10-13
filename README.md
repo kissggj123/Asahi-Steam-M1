@@ -32,9 +32,9 @@ New size（后续给 Linux 的空间） = Total size（总空间） - [Minimum n
 
 ## 3. 系统选择与下载
 
-在系统选择步骤中，直接选择 `1`。然后等待系统下载完成。
 <img width="369" alt="image" src="https://github.com/user-attachments/assets/0dcd1576-c07c-487c-8bde-dc510ffd5d62">
 
+在系统选择步骤中，直接选择 `1`。然后等待系统下载完成。
 
 ## 4. 启动到 Asahi Linux 的前序步骤
 <img width="468" alt="image" src="https://github.com/user-attachments/assets/f887ea5b-7f08-4a63-96c2-747cff9f70b6">
