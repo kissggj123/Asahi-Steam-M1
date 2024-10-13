@@ -1,7 +1,6 @@
 # Asahi-Steam-M1
-在M1上通过Fedora Asahi Remix游玩Steam游戏
+在MacBook M1上通过Fedora Asahi Remix游玩Steam游戏
 
-当然，以下是你请求的内容以完整的 Markdown 格式展示：
 
 ```markdown
 # Asahi Linux 安装指南
