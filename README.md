@@ -72,7 +72,7 @@ New size（后续给 Linux 的空间） = Total size（总空间） - [Minimum n
 
 安装完成，可以开始使用 Asahi Linux 并享受支持 Steam 的游戏体验了
 
-## 卸载步骤
+## 附加内容：卸载步骤
 
 #以下是卸载 Asahi Linux 步骤的代码：
 
@@ -246,5 +246,5 @@ Unallocated:
   sudo btrfs device remove /dev/nvme0n1p9 /
   ```
 
-通过以上步骤，你可以将空闲分区逻辑合并到已有的 Btrfs 文件系统中，并确保它们在系统重启后自动挂载。
+通过以上步骤，你可以将空闲分区逻辑合并到已有的 Btrfs 文件系统中且它们在系统重启后自动挂载。
 ```
