@@ -73,3 +73,88 @@ New size（后续给 Linux 的空间） = Total size（总空间） - [Minimum n
 ## 6. 完成
 
 现在安装完成，可以开始使用 Asahi Linux 并享受 Steam 带来的游戏体验了！
+
+#以下是卸载 Asahi Linux 步骤的代码：
+
+```markdown
+# 卸载 Asahi Linux 指南
+
+## 1. 查看磁盘列表
+
+首先，使用以下命令查看当前磁盘分区列表：
+
+```bash
+diskutil list
+```
+
+你会看到类似以下输出的内容：
+
+```text
+/dev/disk0 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *500.3 GB   disk0
+   1:             Apple_APFS_ISC Container disk1         524.3 MB   disk0s1
+   2:                 Apple_APFS Container disk4         390.0 GB   disk0s2
+   3:                 Apple_APFS Container disk3         2.5 GB     disk0s3
+   4:                        EFI EFI - FEDOR             524.3 MB   disk0s4
+   5:           Linux Filesystem                         1.1 GB     disk0s5
+   6:           Linux Filesystem                         100.3 GB   disk0s6
+   7:        Apple_APFS_Recovery Container disk2         5.4 GB     disk0s7
+```
+
+> **说明**: 需要检查自己的输出序号，找到对应的 Asahi Linux 分区（例如上面示例中的 3, 4, 5, 6）。
+
+## 2. 删除 Asahi Linux 的引导程序和分区
+
+接下来，执行以下命令来删除 Asahi Linux 的引导程序和分区：
+
+1. 删除引导程序：
+
+    ```bash
+    diskutil apfs deleteContainer disk0s3
+    ```
+
+2. 清除 Linux 分区：
+
+    ```bash
+    diskutil eraseVolume free free disk0s4
+    diskutil eraseVolume free free disk0s5
+    diskutil eraseVolume free free disk0s6
+    ```
+
+> **注意**: 这些命令将会清空对应的 Linux 分区和 EFI 分区。
+
+## 3. 合并空闲空间
+
+再次运行 `diskutil list`，确认清除后的空闲分区已被释放。你会看到输出的内容有一个(free space)的条目：
+
+```text
+/dev/disk0 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *500.3 GB   disk0
+   1:             Apple_APFS_ISC Container disk1         524.3 MB   disk0s1
+   2:                 Apple_APFS Container disk4         390.0 GB   disk0s2
+                    (free space)                         104.4 GB   -
+   3:        Apple_APFS_Recovery Container disk2         5.4 GB     disk0s7
+```
+
+接下来，开始合并所有空闲分区到 macOS：
+
+```bash
+diskutil apfs resizeContainer disk0s2 0
+```
+
+> **说明**: 这将合并所有存在的空闲分区到 `disk0s2`（macOS 的主分区）。
+
+## 4. 完成
+
+```text
+/dev/disk0 (internal, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                        *500.3 GB   disk0
+   1:             Apple_APFS_ISC Container disk1         524.3 MB   disk0s1
+   2:                 Apple_APFS Container disk4         494.4 GB   disk0s2
+   3:        Apple_APFS_Recovery Container disk2         5.4 GB     disk0s7
+```
+至此，Asahi Linux 已经被完全卸载，磁盘空间成功合并到 macOS 中。
+```
